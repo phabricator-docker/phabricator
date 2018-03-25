@@ -1,0 +1,22 @@
+version: '3'
+services:
+  phabricator:
+    build: ./
+    image: phabricator/phabricator
+    volumes:
+       - config:/var/www/phabricator/conf/local
+    ports:
+       - 8888:80
+    links:
+      - database
+  database:
+    image: mariadb:10.2
+    volumes:
+       - db-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: CHANGEME
+volumes:
+  config:
+  db-data:
