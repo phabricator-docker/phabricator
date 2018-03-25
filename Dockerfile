@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:7.1-apache
 
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
@@ -22,6 +22,7 @@ RUN set -ex; \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
+    opcache \
 		mbstring \
 		iconv \
 		mysqli \
@@ -43,13 +44,35 @@ RUN set -ex; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
-# RUN pecl install apc \
-#   && docker-php-ext-enable apc
+RUN pecl channel-update pecl.php.net \
+  && pecl install apcu \
+  && docker-php-ext-enable apcu
+
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+  		echo 'opcache.memory_consumption=128'; \
+  		echo 'opcache.interned_strings_buffer=8'; \
+  		echo 'opcache.max_accelerated_files=4000'; \
+  		echo 'opcache.revalidate_freq=60'; \
+  		echo 'opcache.fast_shutdown=1'; \
+  		echo 'opcache.enable_cli=1'; \
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 ENV APACHE_DOCUMENT_ROOT /var/www/phabricator/webroot
 
-COPY ./etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN { \
+  		echo '<VirtualHost *:80>'; \
+  		echo 'DocumentRoot ${APACHE_DOCUMENT_ROOT}'; \
+  		echo 'RewriteEngine on'; \
+  		echo 'RewriteRule ^(.*)$ /index.php?__path__=$1 [B,L,QSA]'; \
+  		echo '</VirtualHost>'; \
+    } > /etc/apache2/sites-available/000-default.conf
 
 COPY ./ /var/www
+
+WORKDIR /var/www
+
+RUN git submodule update --init --recursive
 
 ENV PATH "$PATH:/var/www/phabricator/bin"
