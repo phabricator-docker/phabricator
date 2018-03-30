@@ -9,6 +9,15 @@ services:
        - 8888:80
     links:
       - database
+  daemon:
+    build:
+      context: ./
+      dockerfile: Dockerfile.daemon
+    image: phabricator/daemon
+    volumes:
+       - config:/var/www/phabricator/conf/local
+    links:
+      - database
   database:
     image: mariadb:10.2
     volumes:
