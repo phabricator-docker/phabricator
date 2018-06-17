@@ -5,6 +5,7 @@ FROM php:7.1-apache
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     git \
+    ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
 # install the PHP extensions we need
