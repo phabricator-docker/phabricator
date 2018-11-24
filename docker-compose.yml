@@ -5,6 +5,7 @@ services:
     image: phabricator/phabricator
     volumes:
        - config:/var/www/phabricator/conf/local
+       - repo:/var/repo
     ports:
        - 8888:80
     links:
@@ -16,6 +17,7 @@ services:
     image: phabricator/daemon
     volumes:
        - config:/var/www/phabricator/conf/local
+       - repo:/var/repo
     links:
       - database
   database:
@@ -28,4 +30,5 @@ services:
       MYSQL_ROOT_PASSWORD: CHANGEME
 volumes:
   config:
+  repo:
   db-data:

@@ -1,11 +1,14 @@
-FROM php:7.1-apache
+FROM php:7.2-apache
 
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     git \
+    mercurial \
+    subversion \
     ca-certificates \
+    python-pygments \
   && rm -rf /var/lib/apt/lists/*
 
 # install the PHP extensions we need
@@ -20,9 +23,19 @@ RUN set -ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libcurl4-gnutls-dev \
+    libjpeg62-turbo-dev \
+		libpng-dev \
+    libfreetype6-dev \
 	; \
 	\
+  docker-php-ext-configure gd \
+		--with-jpeg-dir=/usr \
+		--with-png-dir=/usr \
+    --with-freetype-dir=/usr \
+  ; \
+  \
 	docker-php-ext-install -j "$(nproc)" \
+    gd \
     opcache \
 		mbstring \
 		iconv \
@@ -30,7 +43,7 @@ RUN set -ex; \
 		curl \
 		pcntl \
 	; \
-	\
+  \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
@@ -58,17 +71,33 @@ RUN { \
   		echo 'opcache.revalidate_freq=60'; \
   		echo 'opcache.fast_shutdown=1'; \
   		echo 'opcache.enable_cli=1'; \
+      echo 'opcache.validate_timestamps=0'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# Set the default timezone.
+RUN { \
+  		echo 'date.timezone="UTC"'; \
+    } > /usr/local/etc/php/conf.d/timezone.ini
+
+# File Uploads
+RUN { \
+  		echo 'post_max_size=32M'; \
+      echo 'upload_max_filesize=32M'; \
+    } > /usr/local/etc/php/conf.d/uploads.ini
 
 ENV APACHE_DOCUMENT_ROOT /var/www/phabricator/webroot
 
 RUN { \
   		echo '<VirtualHost *:80>'; \
-  		echo 'DocumentRoot ${APACHE_DOCUMENT_ROOT}'; \
-  		echo 'RewriteEngine on'; \
-  		echo 'RewriteRule ^(.*)$ /index.php?__path__=$1 [B,L,QSA]'; \
+  		echo '  DocumentRoot ${APACHE_DOCUMENT_ROOT}'; \
+  		echo '  RewriteEngine on'; \
+  		echo '  RewriteRule ^(.*)$ /index.php?__path__=$1 [B,L,QSA]'; \
   		echo '</VirtualHost>'; \
     } > /etc/apache2/sites-available/000-default.conf
+
+# Repository Folder.
+RUN mkdir /var/repo \
+  && chown www-data:www-data /var/repo
 
 COPY ./ /var/www
 
