@@ -9,6 +9,7 @@ RUN apt-get update \
     subversion \
     ca-certificates \
     python-pygments \
+    imagemagick \
   && rm -rf /var/lib/apt/lists/*
 
 # install the PHP extensions we need
