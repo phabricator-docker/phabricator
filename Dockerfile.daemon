@@ -1,4 +1,4 @@
-FROM php:7.2-cli
+FROM php:7.2-cli-stretch
 
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
