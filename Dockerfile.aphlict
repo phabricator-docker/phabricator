@@ -1,4 +1,6 @@
+##### Start Aphlict
 FROM php:7.2-cli-stretch
+##### End Aphlict
 
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
@@ -15,19 +17,24 @@ RUN apt-get update \
 
 # install the PHP extensions we need
 RUN set -ex; \
+    \
+    if command -v a2enmod; then \
+        a2enmod rewrite; \
+    fi; \
+    \
     savedAptMark="$(apt-mark showmanual)"; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-    libcurl4-gnutls-dev \
+        libcurl4-gnutls-dev \
     libjpeg62-turbo-dev \
-    libpng-dev \
+        libpng-dev \
     libfreetype6-dev \
-  ; \
-  \
+    ; \
+    \
   docker-php-ext-configure gd \
-    --with-jpeg-dir=/usr \
-    --with-png-dir=/usr \
+        --with-jpeg-dir=/usr \
+        --with-png-dir=/usr \
     --with-freetype-dir=/usr \
   ; \
   \
@@ -39,8 +46,9 @@ RUN set -ex; \
     mysqli \
     curl \
     pcntl \
+    zip \
     ; \
-    \
+  \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     apt-mark auto '.*' > /dev/null; \
     apt-mark manual $savedAptMark; \
@@ -83,15 +91,13 @@ RUN { \
     } > /usr/local/etc/php/conf.d/uploads.ini
 
 # Repository Folder.
-RUN mkdir /var/repo
-
-RUN mkdir -p /var/tmp/phd/log/ \
-  && touch /var/tmp/phd/log/daemons.log \
-  && mkdir -p /var/log \
-  && touch /var/log/aphlict.log \
-  && chown www-data:www-data /var/log/aphlict.log
+RUN mkdir /var/repo \
+  && chown www-data:www-data /var/repo
 
 ##### Start Aphlict
+RUN mkdir -p /var/log \
+  && touch /var/log/aphlict.log \
+  && chown www-data:www-data /var/log/aphlict.log
 
 EXPOSE 22280
 
@@ -101,7 +107,6 @@ COPY --from=node:lts-stretch /usr/local/lib/node_modules /usr/local/lib/node_mod
 
 RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm; \
     ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx;
-
 ##### End Aphlict
 
 COPY ./ /var/www
@@ -113,11 +118,9 @@ RUN git submodule update --init --recursive
 ENV PATH "$PATH:/var/www/phabricator/bin"
 
 ##### Start Aphlict
-
 RUN npm install --prefix /var/www/phabricator/support/aphlict/server ws
 
 USER www-data
 
 CMD aphlict debug
-
 ##### End Aphlict
