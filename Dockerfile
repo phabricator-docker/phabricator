@@ -1,4 +1,6 @@
+##### Start Phabricator
 FROM php:7.2-apache-stretch
+##### End Phabricator
 
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
@@ -44,6 +46,7 @@ RUN set -ex; \
     mysqli \
     curl \
     pcntl \
+    zip \
     ; \
   \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
@@ -87,6 +90,11 @@ RUN { \
         echo 'upload_max_filesize=32M'; \
     } > /usr/local/etc/php/conf.d/uploads.ini
 
+# Repository Folder.
+RUN mkdir /var/repo \
+  && chown www-data:www-data /var/repo
+
+##### Start Phabricator
 ENV APACHE_DOCUMENT_ROOT /var/www/phabricator/webroot
 
 RUN { \
@@ -96,10 +104,7 @@ RUN { \
         echo '  RewriteRule ^(.*)$ /index.php?__path__=$1 [B,L,QSA]'; \
         echo '</VirtualHost>'; \
     } > /etc/apache2/sites-available/000-default.conf
-
-# Repository Folder.
-RUN mkdir /var/repo \
-  && chown www-data:www-data /var/repo
+##### End Phabricator
 
 COPY ./ /var/www
 
