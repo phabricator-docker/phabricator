@@ -91,6 +91,19 @@ RUN mkdir -p /var/tmp/phd/log/ \
   && touch /var/log/aphlict.log \
   && chown www-data:www-data /var/log/aphlict.log
 
+##### Start Aphlict
+
+EXPOSE 22280
+
+COPY --from=node:lts-stretch /usr/local/bin/node /usr/local/bin/node
+
+COPY --from=node:lts-stretch /usr/local/lib/node_modules /usr/local/lib/node_modules
+
+RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm; \
+    ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx;
+
+##### End Aphlict
+
 COPY ./ /var/www
 
 WORKDIR /var/www
@@ -99,5 +112,12 @@ RUN git submodule update --init --recursive
 
 ENV PATH "$PATH:/var/www/phabricator/bin"
 
-CMD phd start \
-  && tail -f /var/tmp/phd/log/daemons.log
+##### Start Aphlict
+
+RUN npm install --prefix /var/www/phabricator/support/aphlict/server ws
+
+USER www-data
+
+CMD aphlict debug
+
+##### End Aphlict
