@@ -99,7 +99,7 @@ RUN mkdir -p /var/log \
   && touch /var/log/aphlict.log \
   && chown www-data:www-data /var/log/aphlict.log
 
-EXPOSE 22280
+EXPOSE 22280 22281
 
 COPY --from=node:lts-stretch /usr/local/bin/node /usr/local/bin/node
 
