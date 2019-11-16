@@ -1,0 +1,24 @@
+name: Update
+
+on: [repository_dispatch]
+
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix: 
+        branch: ['master', 'stable']
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ matrix.branch }}
+          submodules: 'recursive'
+      - run: |
+          git submodule --quiet foreach git pull --quiet origin ${{ matrix.branch }}
+          if ! (git diff --quiet) then
+            git commit --all -m "Update Phabricator" --author "Phabricator Docker  <phabricator-docker@users.noreply.github.com>"
+            git push origin ${{ matrix.branch }}
+          fi
