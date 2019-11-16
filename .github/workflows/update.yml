@@ -1,6 +1,6 @@
 name: Update
 
-on: check_run
+on: push
 
 jobs:
   update:
