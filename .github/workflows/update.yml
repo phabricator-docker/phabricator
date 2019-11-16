@@ -1,6 +1,6 @@
 name: Update
 
-on: [repository_dispatch]
+on: check_run
 
 jobs:
   update:
