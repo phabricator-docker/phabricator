@@ -18,7 +18,8 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           submodules: 'recursive'
-      - run: |
+      - name: 'Pull Submodules & Commit Changes'
+        run: |
           git submodule --quiet foreach git pull --quiet origin ${{ matrix.branch }}
           if ! (git diff --quiet) then
             git commit --all -m "Update Phabricator" --author "Phabricator Docker  <phabricator-docker@users.noreply.github.com>"
