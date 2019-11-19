@@ -14,7 +14,7 @@ jobs:
         branch: ['master', 'stable']
 
     steps:
-      - uses: actions/checkout@v1.1.0
+      - uses: actions/checkout@v1
         with:
           ref: ${{ matrix.branch }}
           submodules: 'recursive'
@@ -22,6 +22,7 @@ jobs:
         run: |
           git submodule --quiet foreach git pull --quiet origin ${{ matrix.branch }}
           if ! (git diff --quiet) then
+            git checkout -b ${{ matrix.branch }}
             git config --global user.name "Phabricator Docker"
             git config --global user.email "phabricator-docker@users.noreply.github.com"
             git commit --all -m "Update Phabricator"
