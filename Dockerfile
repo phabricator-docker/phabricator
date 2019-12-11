@@ -1,5 +1,5 @@
 ##### Start Phabricator
-FROM php:7.3-apache-stretch
+FROM php:7.3-apache-buster
 ##### End Phabricator
 
 # Required Components

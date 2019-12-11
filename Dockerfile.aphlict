@@ -1,5 +1,5 @@
 ##### Start Aphlict
-FROM php:7.3-cli-stretch
+FROM php:7.3-cli
 ##### End Aphlict
 
 # Required Components
@@ -102,9 +102,9 @@ RUN mkdir -p /var/log \
 EXPOSE 22280
 EXPOSE 22281
 
-COPY --from=node:lts-stretch /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:lts-buster /usr/local/bin/node /usr/local/bin/node
 
-COPY --from=node:lts-stretch /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node:lts-buster /usr/local/lib/node_modules /usr/local/lib/node_modules
 
 RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm; \
     ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx;
