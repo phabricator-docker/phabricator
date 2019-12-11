@@ -1,5 +1,5 @@
 ##### Start Aphlict
-FROM php:7.3-cli
+FROM php:7.3-cli-buster
 ##### End Aphlict
 
 # Required Components
