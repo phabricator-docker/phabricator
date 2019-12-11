@@ -26,10 +26,11 @@ RUN set -ex; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        libcurl4-gnutls-dev \
-    libjpeg62-turbo-dev \
-        libpng-dev \
-    libfreetype6-dev \
+      libcurl4-gnutls-dev \
+      libjpeg62-turbo-dev \
+      libpng-dev \
+      libfreetype6-dev \
+      libzip-dev \
     ; \
     \
   docker-php-ext-configure gd \
