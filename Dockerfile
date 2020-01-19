@@ -10,7 +10,7 @@ RUN apt-get update \
     mercurial \
     subversion \
     ca-certificates \
-    python-pygments \
+    python3-pygments \
     imagemagick \
     procps \
   && rm -rf /var/lib/apt/lists/*
