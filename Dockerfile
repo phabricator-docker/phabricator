@@ -10,6 +10,8 @@ RUN apt-get update \
     mercurial \
     subversion \
     ca-certificates \
+    # @see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=944908
+    python3-pkg-resources \
     python3-pygments \
     imagemagick \
     procps \
