@@ -13,5 +13,9 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - name: docker build
-      run: docker build
+    - name: phabricator
+      run: docker build ./Dockerfile
+    - name: daemon
+      run: docker build ./Dockerfile.daemon
+    - name: aphlict
+      run: docker build ./Dockerfile.aphlict
