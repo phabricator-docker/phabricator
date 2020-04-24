@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - stable
 
 jobs:
   build:
@@ -14,8 +15,8 @@ jobs:
       with:
         submodules: recursive
     - name: phabricator
-      run: docker build ./Dockerfile
+      run: docker build -f ./Dockerfile ./
     - name: daemon
-      run: docker build ./Dockerfile.daemon
+      run: docker build -f ./Dockerfile.daemon ./
     - name: aphlict
-      run: docker build ./Dockerfile.aphlict
+      run: docker build -f ./Dockerfile.aphlict ./
