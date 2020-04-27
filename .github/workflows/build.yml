@@ -1,0 +1,22 @@
+name: Docker Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - stable
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: phabricator
+      run: docker build -f ./Dockerfile ./
+    - name: daemon
+      run: docker build -f ./Dockerfile.daemon ./
+    - name: aphlict
+      run: docker build -f ./Dockerfile.aphlict ./
