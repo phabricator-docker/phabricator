@@ -14,6 +14,9 @@ RUN apt-get update \
     python3-pkg-resources \
     python3-pygments \
     imagemagick \
+    # @see https://secure.phabricator.com/w/guides/dependencies/
+    # provides ssh-keygen and ssh, these are needed to sync ssh repositories
+    openssh-client \
     procps \
   && rm -rf /var/lib/apt/lists/*
 
