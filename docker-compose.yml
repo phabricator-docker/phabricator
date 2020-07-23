@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 services:
   phabricator:
     build: ./
@@ -15,6 +15,7 @@ services:
       context: ./
       dockerfile: Dockerfile.daemon
     image: phabricator/daemon
+    user: www-data
     volumes:
        - config:/var/www/phabricator/conf/local
        - repo:/var/repo
