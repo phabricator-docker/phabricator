@@ -18,6 +18,7 @@ RUN apt-get update \
     # provides ssh-keygen and ssh, these are needed to sync ssh repositories
     openssh-client \
     procps \
+    mariadb-client \
   && rm -rf /var/lib/apt/lists/*
 
 # install the PHP extensions we need
