@@ -116,16 +116,16 @@ RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm; \
     ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx;
 ##### End Aphlict
 
-COPY ./ /var/www
+COPY ./ /opt
 
-WORKDIR /var/www
+WORKDIR /opt/phabricator
 
 RUN git submodule update --init --recursive
 
-ENV PATH "$PATH:/var/www/phabricator/bin"
+ENV PATH "$PATH:/opt/phabricator/bin"
 
 ##### Start Aphlict
-RUN npm install --prefix /var/www/phabricator/support/aphlict/server ws
+RUN npm install --prefix /opt/phabricator/support/aphlict/server ws
 
 USER www-data
 
