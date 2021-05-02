@@ -4,7 +4,7 @@ services:
     build: ./
     image: phabricator/phabricator
     volumes:
-       - config:/var/www/phabricator/conf/local
+       - config:/opt/phabricator/conf/local
        - repo:/var/repo
     ports:
        - 8888:80
@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile.daemon
     image: phabricator/daemon
     volumes:
-       - config:/var/www/phabricator/conf/local
+       - config:/opt/phabricator/conf/local
        - repo:/var/repo
     links:
       - database
