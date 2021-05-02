@@ -24,7 +24,10 @@ RUN apt-get update \
 RUN set -ex; \
     \
     if command -v a2enmod; then \
-        a2enmod rewrite; \
+        # Phabricator needs mod_rewrite for rewritting to index.php
+        # Writting custom configuration files is much easier with mod_env enabled
+        # @see https://secure.phabricator.com/book/phabricator/article/advanced_configuration/
+        a2enmod rewrite env; \
     fi; \
     \
     savedAptMark="$(apt-mark showmanual)"; \
@@ -101,21 +104,23 @@ RUN mkdir /var/repo \
   && chown www-data:www-data /var/repo
 
 ##### Start Phabricator
-ENV APACHE_DOCUMENT_ROOT /var/www/phabricator/webroot
-
 RUN { \
         echo '<VirtualHost *:80>'; \
-        echo '  DocumentRoot ${APACHE_DOCUMENT_ROOT}'; \
         echo '  RewriteEngine on'; \
         echo '  RewriteRule ^(.*)$ /index.php?__path__=$1 [B,L,QSA]'; \
         echo '</VirtualHost>'; \
     } > /etc/apache2/sites-available/000-default.conf
 ##### End Phabricator
 
-COPY ./ /var/www
+COPY ./ /opt
 
-WORKDIR /var/www
+WORKDIR /opt/phabricator
+
+##### Start Phabricator
+RUN rmdir /var/www/html; \
+	  ln -sf /opt/phabricator/webroot /var/www/html;
+##### End Phabricator
 
 RUN git submodule update --init --recursive
 
-ENV PATH "$PATH:/var/www/phabricator/bin"
+ENV PATH "$PATH:/opt/phabricator/bin"
