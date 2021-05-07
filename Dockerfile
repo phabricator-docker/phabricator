@@ -25,9 +25,7 @@ RUN set -ex; \
     \
     if command -v a2enmod; then \
         # Phabricator needs mod_rewrite for rewritting to index.php
-        # Writting custom configuration files is much easier with mod_env enabled
-        # @see https://secure.phabricator.com/book/phabricator/article/advanced_configuration/
-        a2enmod rewrite env; \
+        a2enmod rewrite; \
     fi; \
     \
     savedAptMark="$(apt-mark showmanual)"; \
