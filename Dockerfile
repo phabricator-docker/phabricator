@@ -2,6 +2,8 @@
 FROM php:7.3-apache-buster
 ##### End Phabricator
 
+LABEL org.opencontainers.image.source https://github.com/phabricator-docker/phabricator
+
 # Required Components
 # @see https://secure.phabricator.com/book/phabricator/article/installation_guide/#installing-required-comp
 RUN apt-get update \

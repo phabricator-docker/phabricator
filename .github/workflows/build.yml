@@ -27,13 +27,20 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/login-action@v1 
+        if: ${{ github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/stable' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: get image tag
         id: get-tag
+        shell: bash
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-            tag="${{ matrix.tag}}"
+            tag="${{ matrix.tag}}\nghcr.io/${{ matrix.tag}}"
           elif [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
-            tag="${{ matrix.tag}}:stable"
+            tag="${{ matrix.tag}}:stable\nghcr.io/${{ matrix.tag}}:stable"
           else
             tag=""
           fi
