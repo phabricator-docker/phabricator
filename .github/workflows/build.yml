@@ -30,10 +30,12 @@ jobs:
       - name: get image tag
         id: get-tag
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            tag="${{ matrix.tag}}"
+          elif [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
             tag="${{ matrix.tag}}:stable"
           else
-            tag="${{ matrix.tag}}"
+            tag=""
           fi
           echo "::set-output name=tag::$tag"
       - uses: actions/checkout@v2
