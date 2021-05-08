@@ -38,7 +38,7 @@ jobs:
           else
             tag="${{ matrix.tag}}"
           fi
-          ::set-output name=tag::$tag
+          echo "::set-output name=tag::$tag"
       - uses: docker/build-push-action@v2
         with:
           context: .
