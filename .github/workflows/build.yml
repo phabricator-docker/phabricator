@@ -13,11 +13,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - tag: 'phabricator/phabricator'
+          - tag: 'phabricator'
             file: './Dockerfile'
-          - tag: 'phabricator/daemon'
+          - tag: 'daemon'
             file: './Dockerfile.daemon'
-          - tag: 'phabricator/aphlict'
+          - tag: 'aphlict'
             file: './Dockerfile.aphlict'
     steps:
       - uses: docker/setup-qemu-action@v1
@@ -38,9 +38,9 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-            tag="${{ matrix.tag}},ghcr.io/${{ matrix.tag}}"
+            tag="phabricator/${{ matrix.tag}},ghcr.io/phabricator-docker/${{ matrix.tag}}"
           elif [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
-            tag="${{ matrix.tag}}:stable,ghcr.io/${{ matrix.tag}}:stable"
+            tag="phabricator/${{ matrix.tag}}:stable,ghcr.io/phabricator-docker/${{ matrix.tag}}:stable"
           else
             tag=""
           fi
