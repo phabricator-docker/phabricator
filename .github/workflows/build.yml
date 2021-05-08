@@ -34,11 +34,11 @@ jobs:
         id: get-tag
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
-            tag="{{ matrix.tag}}:stable"
+            tag="${{ matrix.tag}}:stable"
           else
-            tag="{{ matrix.tag}}"
+            tag="${{ matrix.tag}}"
           fi
-          echo ::set-output name=tag::$tag
+          ::set-output name=tag::$tag
       - uses: docker/build-push-action@v2
         with:
           context: .
