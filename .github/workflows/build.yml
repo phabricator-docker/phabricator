@@ -38,9 +38,9 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-            tag="phabricator/${{ matrix.tag}},ghcr.io/phabricator-docker/${{ matrix.tag}}"
+            tag="phabricator/${{ matrix.tag }},ghcr.io/phabricator-docker/${{ matrix.tag }}"
           elif [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
-            tag="phabricator/${{ matrix.tag}}:stable,ghcr.io/phabricator-docker/${{ matrix.tag}}:stable"
+            tag="phabricator/${{ matrix.tag }}:stable,ghcr.io/phabricator-docker/${{ matrix.tag }}:stable"
           else
             tag=""
           fi
