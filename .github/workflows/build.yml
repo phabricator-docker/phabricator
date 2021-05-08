@@ -10,13 +10,40 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - tag: 'phabricator/phabricator'
+            file: './Dockerfile'
+          - tag: 'phabricator/daemon'
+            file: './Dockerfile.daemon'
+          - tag: 'phabricator/aphlict'
+            file: './Dockerfile.aphlict'
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: phabricator
-      run: docker build -f ./Dockerfile ./
-    - name: daemon
-      run: docker build -f ./Dockerfile.daemon ./
-    - name: aphlict
-      run: docker build -f ./Dockerfile.aphlict ./
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/login-action@v1 
+        if: ${{ github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/stable' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: get image tag
+        id: get-tag
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            tag="${{ matrix.tag}}"
+          elif [[ ${{ github.ref }} == 'refs/heads/stable' ]]; then
+            tag="${{ matrix.tag}}:stable"
+          else
+            tag=""
+          fi
+          echo "::set-output name=tag::$tag"
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/stable' }}
+          file: ${{ matrix.file }}
+          tags: ${{ steps.get-tag.outputs.tag }}
