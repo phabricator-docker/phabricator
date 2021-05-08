@@ -52,5 +52,6 @@ jobs:
         with:
           context: .
           push: ${{ github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/stable' }}
+          platforms: linux/amd64,linux/arm64
           file: ${{ matrix.file }}
           tags: ${{ steps.get-tag.outputs.tag }}
