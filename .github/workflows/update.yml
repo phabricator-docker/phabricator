@@ -14,8 +14,9 @@ jobs:
         branch: ['master', 'stable']
 
     steps:
-      - uses: actions/checkout@v1.1.0
+      - uses: actions/checkout@v2
         with:
+          token: ${{ secrets.PAT }}
           ref: ${{ matrix.branch }}
           submodules: 'recursive'
       - name: 'Pull Submodules & Commit Changes'
