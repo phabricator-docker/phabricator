@@ -21,7 +21,7 @@ jobs:
           submodules: 'recursive'
       - name: 'Pull Submodules & Commit Changes'
         run: |
-          git submodule --quiet foreach git pull --quiet --allow-unrelated-histories origin ${{ matrix.branch }}
+          git submodule --quiet foreach git checkout --quiet origin/${{ matrix.branch }}
           if ! (git diff --quiet) then
             git checkout -B ${{ matrix.branch }}
             git config --global user.name "Phabricator Docker"
