@@ -18,10 +18,10 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           ref: ${{ matrix.branch }}
+          fetch-depth: 0
           submodules: 'recursive'
       - name: 'Pull Submodules & Commit Changes'
         run: |
-          git submodule --quiet foreach git fetch --quiet origin ${{ matrix.branch }}
           git submodule --quiet foreach git checkout --quiet origin/${{ matrix.branch }}
           if ! (git diff --quiet) then
             git checkout -B ${{ matrix.branch }}
