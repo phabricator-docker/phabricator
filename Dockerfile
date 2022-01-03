@@ -1,5 +1,5 @@
 ##### Start Phabricator
-FROM php:7.3-apache-buster
+FROM php:7.4-apache-buster
 ##### End Phabricator
 
 LABEL org.opencontainers.image.source https://github.com/phabricator-docker/phabricator

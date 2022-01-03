@@ -1,5 +1,5 @@
 ##### Start Daemon
-FROM php:7.3-cli-buster
+FROM php:7.4-cli-buster
 ##### End Daemon
 
 LABEL org.opencontainers.image.source https://github.com/phabricator-docker/phabricator
