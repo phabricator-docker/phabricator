@@ -34,6 +34,7 @@ RUN set -ex; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
+      libonig-dev \
       libcurl4-gnutls-dev \
       libjpeg62-turbo-dev \
       libpng-dev \
