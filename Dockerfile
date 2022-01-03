@@ -43,7 +43,6 @@ RUN set -ex; \
     \
   docker-php-ext-configure gd \
     --with-jpeg \
-    --with-png \
     --with-freetype \
   ; \
   \
