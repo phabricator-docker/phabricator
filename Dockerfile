@@ -1,5 +1,5 @@
 ##### Start Phabricator
-FROM php:7.3-apache-buster
+FROM php:7.4-apache-buster
 ##### End Phabricator
 
 LABEL org.opencontainers.image.source https://github.com/phabricator-docker/phabricator
@@ -34,6 +34,7 @@ RUN set -ex; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
+      libonig-dev \
       libcurl4-gnutls-dev \
       libjpeg62-turbo-dev \
       libpng-dev \
@@ -42,9 +43,8 @@ RUN set -ex; \
     ; \
     \
   docker-php-ext-configure gd \
-        --with-jpeg-dir=/usr \
-        --with-png-dir=/usr \
-    --with-freetype-dir=/usr \
+    --with-jpeg \
+    --with-freetype \
   ; \
   \
     docker-php-ext-install -j "$(nproc)" \
