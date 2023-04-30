@@ -40,11 +40,15 @@ RUN set -ex; \
       libpng-dev \
       libfreetype6-dev \
       libzip-dev \
+      libldap2-dev \
     ; \
     \
   docker-php-ext-configure gd \
     --with-jpeg \
     --with-freetype \
+  ; \
+  docker-php-ext-configure ldap \
+        --with-libdir=lib/x86_64-linux-gnu/ \
   ; \
   \
     docker-php-ext-install -j "$(nproc)" \
@@ -56,6 +60,7 @@ RUN set -ex; \
     curl \
     pcntl \
     zip \
+    ldap \
     ; \
   \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
